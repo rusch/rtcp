@@ -1,0 +1,37 @@
+= rtcp
+
+* https://github.com/rusch/rtcp
+
+== Description
+
+The RTP Control Protocol (RTCP) gathers statistical data about RTP sessions,
+for example transmitted octet and packet counts, lost packet counts,
+round-trip delay time and interarrival jitter.
+
+This library parses RTCP data into ruby objects.
+
+== Features
+
+* Parse RTCP Packets into Ruby Objects
+
+== Examples
+
+=== Parse an RTCP Packet
+
+  require 'rtcp'
+
+  ...
+
+== Requirements
+
+* Rubies (tested, at least):
+  * 1.9.3
+  * JRuby 1.7.3 (1.9 mode)
+
+== Install
+
+  $ gem install
+
+== Copyright
+
+Copyright (c) 2013 Christian Rusch
