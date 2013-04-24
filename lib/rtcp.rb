@@ -1,6 +1,5 @@
 require_relative 'rtcp/version'
 require_relative 'rtcp/decode_error'
-require_relative 'rtcp/enums'
 require_relative 'rtcp/generic'
 require_relative 'rtcp/sr'
 require_relative 'rtcp/rr'
@@ -9,6 +8,7 @@ require_relative 'rtcp/bye'
 require_relative 'rtcp/xr'
 require_relative 'rtcp/app'
 require_relative 'rtcp/rsi'
+require_relative 'rtcp/psfb'
 
 class RTCP
 
@@ -20,6 +20,7 @@ class RTCP
     RTCP::XR::PT_ID      => RTCP::XR,
     RTCP::APP::PT_ID     => RTCP::APP,
     RTCP::RSI::PT_ID     => RTCP::RSI,
+    RTCP::PSFB::PT_ID    => RTCP::PSFB,
   }
 
   attr_reader :version, :packets, :rr, :sdes, :bye, :app, :rtpfb, :psfb, :xr,
