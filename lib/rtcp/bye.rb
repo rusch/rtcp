@@ -13,11 +13,12 @@
 # (opt) |     length    |               reason for leaving            ...
 #       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-class RTCP::BYE < RTCP::Generic
+require_relative 'base'
+class RTCP::BYE < RTCP::Base
 
   PT_ID = 203
 
-  attr_reader :version, :length, :ssrcs, :reason, :padding
+  attr_reader :version, :ssrcs, :reason, :padding
 
   def decode(packet_data) 
     vpsc, packet_type, length, bye_data = packet_data.unpack('CCna*')

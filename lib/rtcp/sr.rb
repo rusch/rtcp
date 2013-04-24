@@ -37,11 +37,12 @@
 #        |                  profile-specific extensions                  |
 #        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-class RTCP::SR < RTCP::Generic
+require_relative 'base'
+class RTCP::SR < RTCP::Base
 
   PT_ID = 200
 
-  attr_reader :version, :length, :ssrc, :rtp_timestamp, :ntp_timestamp,
+  attr_reader :version, :ssrc, :rtp_timestamp, :ntp_timestamp,
     :packet_count, :octet_count, :report_blocks, :padding
 
   def decode(packet_data)

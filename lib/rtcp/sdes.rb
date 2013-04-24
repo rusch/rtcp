@@ -17,7 +17,8 @@
 #        |                              ...                              |
 #        +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
-class RTCP::SDES < RTCP::Generic
+require_relative 'base'
+class RTCP::SDES < RTCP::Base
 
   PT_ID = 202
 
@@ -32,7 +33,7 @@ class RTCP::SDES < RTCP::Generic
     8 => :priv
   }
 
-  attr_reader :version, :length, :chunks
+  attr_reader :version, :chunks
 
   def decode(packet_data) 
     vprc, packet_type, length, sdes_data = packet_data.unpack('CCna*')

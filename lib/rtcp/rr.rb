@@ -27,11 +27,12 @@
 #        |                  profile-specific extensions                  |
 #        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-class RTCP::RR < RTCP::Generic
+require_relative 'base'
+class RTCP::RR < RTCP::Base
 
   PT_ID = 201
 
-  attr_reader :version, :length, :ssrc, :report_blocks, :padding
+  attr_reader :version, :ssrc, :report_blocks, :padding
 
   def decode(packet_data)
     vprc, packet_type, length, @ssrc, report_block_data =

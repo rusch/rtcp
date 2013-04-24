@@ -48,11 +48,12 @@
 #        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-class RTCP::XR < RTCP::Generic
+require_relative 'base'
+class RTCP::XR < RTCP::Base
 
   PT_ID = 207
 
-  attr_reader :version, :length, :ssrc, :report_blocks, :padding
+  attr_reader :version, :ssrc, :report_blocks, :padding
 
   def decode(packet_data)
     vprc, packet_type, length, @ssrc, report_block_data =
