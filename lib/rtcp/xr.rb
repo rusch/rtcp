@@ -151,10 +151,10 @@ class RTCP::XR < RTCP::Base
     end
 
     if (x &  32 == 32)
-      report_block[:jitter] = values[0]
-      report_block[:jitter] = values[1]
-      report_block[:jitter] = values[2]
-      report_block[:jitter] = values[3]
+      report_block[:min_jitter] = values[0]
+      report_block[:max_jitter] = values[1]
+      report_block[:mean_jitter] = values[2]
+      report_block[:dev_jitter] = values[3]
     end
 
     case ((x >> 3) & 3)

@@ -8,7 +8,7 @@ describe RTCP::XR do
 
   context '.decode' do
     it 'decodes "Extended Record" packets' do
-      xr = subject.decode(EXTENDED_REPORT_PACKET)
+      xr = subject.decode(XR_PACKET_1)
 
       xr.version.should == 2
       xr.length.should == 64
@@ -23,7 +23,10 @@ describe RTCP::XR do
         end_seq:      13373,
         lost_packets: 0,
         dup_packets:  0,
-        jitter:       5
+        min_jitter:   0,
+        max_jitter:   21,
+        mean_jitter:  6,
+        dev_jitter:   5,
       }
 
       xr.report_blocks[1].should == {
@@ -33,7 +36,10 @@ describe RTCP::XR do
         end_seq:      13373,
         lost_packets: 0,
         dup_packets:  0,
-        jitter:       5
+        min_jitter:   0,
+        max_jitter:   21,
+        mean_jitter:  6,
+        dev_jitter:   5,
       }
 
       xr.report_blocks[2].should == {
@@ -54,5 +60,36 @@ describe RTCP::XR do
         ]
       }
     end
+
+    it 'decodes "Extended Record" packets with IPv4 TTL values' do
+      xr = subject.decode(XR_PACKET_2)
+
+      xr.version.should == 2
+      xr.length.should == 124
+      xr.ssrc.should == 3974927014
+      xr.report_blocks.should be_kind_of(Array)
+      xr.report_blocks.length.should == 4
+
+      # The first report block is of type :statistics_summary and contains
+      # the IPv4 TTL values
+      xr.report_blocks[0].should == {
+        ssrc:         3974927014,
+        type:         :statistics_summary,
+        begin_seq:    6985,
+        end_seq:      7325,
+        lost_packets: 0,
+        dup_packets:  0,
+        max_jitter:   80,
+        mean_jitter:  4,
+        min_jitter:   0,
+        dev_jitter:   223,
+        min_ttl:      1,
+        max_ttl:      2,
+        mean_ttl:     3,
+        dev_ttl:      4,
+
+      }
+    end
+
   end
 end

@@ -23,11 +23,24 @@ module TestDescriptions
     78:61:6D:70:6C:65:2E:63:6F:6D:00:00
   }
 
-  EXTENDED_REPORT_PACKET = to_binary %q{
+  XR_PACKET_1 = to_binary %q{
     81:CF:00:0F:3D:43:3B:B7:06:E0:00:09:82:7A:AC:3D:
     1E:6F:34:3D:00:00:00:00:00:00:00:00:00:00:00:00:
     00:00:00:15:00:00:00:06:00:00:00:05:00:00:00:00:
     01:00:00:03:82:7A:AC:3D:1E:6F:34:3D:55:CC:E0:00
+  }
+
+  # Extracted from example capture file available at:
+  # https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=4589
+  XR_PACKET_2 = to_binary %q{
+    80:cf:00:1e:ec:ec:92:a6:06:e8:00:09:ec:ec:92:a6:
+    1b:49:1c:9d:00:00:00:00:00:00:00:00:00:00:00:00:
+    00:00:00:50:00:00:00:04:00:00:00:df:01:02:03:04:
+    07:00:00:08:ec:ec:92:a6:00:00:00:00:00:00:1a:90:
+    00:00:00:41:2e:33:11:10:7f:7f:7f:7f:0a:00:00:14:
+    00:c8:01:f4:08:00:00:09:ec:ec:92:a6:1b:49:1c:9d:
+    00:0b:00:0b:00:00:00:0b:00:01:00:0f:00:00:00:00:
+    00:00:00:14:00:00:00:14:00:00:00:00
   }
 
   # Extracted from example capture file available at:
