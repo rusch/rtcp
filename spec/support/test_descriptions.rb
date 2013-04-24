@@ -1,5 +1,34 @@
 module TestDescriptions
 
+  # Extracted from example capture file available at:
+  # http://wiki.wireshark.org/RTCP
+  # Real-time Transport Control Protocol (Sender Report)
+  #
+  # Sender SSRC: 0xf3cb2001 (4090175489)
+  # MSW and LSW as NTP timestamp: Jan  1, 1970 09:28:01.917999000 UTC
+  # RTP timestamp: 37920
+  # Sender's packet count: 158
+  # Sender's octet count: 39816
+  SR_PACKET_1 = to_binary %q{
+    80:c8:00:06:f3:cb:20:01:83:ab:03:a1:eb:02:0b:3a:
+    00:00:94:20:00:00:00:9e:00:00:9b:88
+  }
+
+  # Extracted from example capture file available at:
+  # https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=4589
+  # MSW and LSW as NTP timestamp: Mar 17, 2010 07:49:41.844999000 UTC
+  # RTP timestamp: 342440
+  # Sender's packet count: 150
+  # Sender's octet count: 25800
+  # Source 1:
+  #   Identifier: 0xecec92a6 (3974927014)
+  SR_PACKET_2 = to_binary %q{
+    81:c8:00:0c:d9:de:03:4d:cf:4b:08:15:d8:51:eb:85:
+    00:05:39:a8:00:00:00:96:00:00:64:c8:ec:ec:92:a6:
+    00:00:00:00:00:00:e5:97:00:00:00:02:00:00:00:00:
+    00:00:00:00
+  }
+
   TESTDATA = to_binary %q{
     81:C9:00:07:3D:43:3B:B7:82:7A:AC:3D:00:00:00:00:
     00:CB:34:3C:00:00:00:06:10:91:6C:D3:00:00:00:00:
@@ -47,20 +76,6 @@ module TestDescriptions
   # http://wiki.wireshark.org/RTCP
   # Real-time Transport Control Protocol (Sender Report)
   #
-  # Sender SSRC: 0xf3cb2001 (4090175489)
-  # MSW and LSW as NTP timestamp: Jan  1, 1970 09:28:01.917999000 UTC
-  # RTP timestamp: 37920
-  # Sender's packet count: 158
-  # Sender's octet count: 39816
-  SENDER_REPORT_PACKET = to_binary %q{
-    80:c8:00:06:f3:cb:20:01:83:ab:03:a1:eb:02:0b:3a:
-    00:00:94:20:00:00:00:9e:00:00:9b:88
-  }
-
-  # Extracted from example capture file available at:
-  # http://wiki.wireshark.org/RTCP
-  # Real-time Transport Control Protocol (Sender Report)
-  # 
   # Chunk 1:
   #   Identifier: 0xf3cb2001 (4090175489)
   #   Type: CNAME (user and domain) (1)
