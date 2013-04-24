@@ -21,6 +21,7 @@ class RTCP
     RTCP::APP::PT_ID     => RTCP::APP,
     RTCP::RSI::PT_ID     => RTCP::RSI,
     RTCP::PSFB::PT_ID    => RTCP::PSFB,
+    RTCP::BYE::PT_ID     => RTCP::BYE,
   }
 
   attr_reader :version, :packets, :rr, :sdes, :bye, :app, :rtpfb, :psfb, :xr,
