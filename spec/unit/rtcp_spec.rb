@@ -9,16 +9,16 @@ describe RTCP do
     end
   end
 
-  context ".decode_list" do
+  context ".decode_all" do
 
     it "returns an empty array when there is nothing to decode" do
-      rtcps = RTCP.decode_list("")
+      rtcps = RTCP.decode_all("")
 
       rtcps.should == []
     end
 
     it "returns an array of RTCP:: objects" do
-      rtcps = RTCP.decode_list(TESTDATA)
+      rtcps = RTCP.decode_all(TESTDATA)
 
       rtcps.should be_kind_of(Array)
       rtcps.length.should == 4 # TEST_DATA contains 4 RTCP packets

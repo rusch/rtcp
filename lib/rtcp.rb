@@ -38,7 +38,7 @@ class RTCP
   end
 
   # Decodes all RTCP packets and returns them in an array
-  def self.decode_list(data)
+  def self.decode_all(data)
     packets = []
     while data && data.length > 0
       packet = self.decode(data)
