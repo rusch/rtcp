@@ -65,4 +65,12 @@ module TestDescriptions
   BYE_WITH_REASON_PACKET = to_binary %q{
     81:cb:00:03:54:85:79:95:07:6d:6d:70:74:65:73:74
   }
+
+  # Capture from communication between Set-Top Box and VQE-S
+  APP_PACKET = to_binary %q{
+    81:CC:00:0B:EB:31:1D:FF:50:4C:49:49:06:00:04:00:
+    00:00:C8:07:00:04:00:00:0D:2E:0D:00:04:00:00:00:
+    01:0F:00:04:00:00:00:00:10:00:04:00:00:00:00:00
+  }
+
 end

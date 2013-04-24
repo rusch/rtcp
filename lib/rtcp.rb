@@ -7,6 +7,7 @@ require_relative 'rtcp/rr'
 require_relative 'rtcp/sdes'
 require_relative 'rtcp/bye'
 require_relative 'rtcp/xr'
+require_relative 'rtcp/app'
 
 class RTCP
 
@@ -16,7 +17,7 @@ class RTCP
     RTCP::RR::PT_ID      => RTCP::RR,
     RTCP::SDES::PT_ID    => RTCP::SDES,
     RTCP::XR::PT_ID      => RTCP::XR,
-
+    RTCP::APP::PT_ID     => RTCP::APP,
   }
 
   attr_reader :version, :packets, :rr, :sdes, :bye, :app, :rtpfb, :psfb, :xr,
