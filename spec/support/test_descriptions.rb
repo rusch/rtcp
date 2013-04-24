@@ -73,4 +73,13 @@ module TestDescriptions
     01:0F:00:04:00:00:00:00:10:00:04:00:00:00:00:00
   }
 
+  # Capture from communication between Set-Top Box and VQE-S
+  PSFB_PACKET = to_binary %q{
+    81:CE:00:02:EB:31:1D:FF:00:00:00:00
+  }
+
+  # Capture from communication between Set-Top Box and VQE-S
+  RSI_PACKET = to_binary %q{
+    81:D1:00:03:EB:31:1D:FF:00:00:00:00:93:61:A0:50
+  }
 end
