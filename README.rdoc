@@ -20,7 +20,37 @@ This library parses RTCP data into ruby objects.
 
   require 'rtcp'
 
-  ...
+  rr = RTCP.decode(rtcp_rr_data)   # => [RTCP::RR Object]
+  rr.ssrc                          # => 3945864703
+  rr.length                        # => 8
+  rr.version                       # => 2
+  rr.report_blocks                 # => []
+
+=== Parse a sequence of RTCP Packets
+
+  require 'rtcp'
+
+  msgs = RTCP.decode(rtcp_data)    # => [Array of RTCP::* Objects]
+
+  msgs[0].class                    # => RTCP::RR
+  msgs[0].ssrc                     # => 3945864703
+
+  msgs[1].class                    # => RTCP::SDES
+  msgs[1].chunks                   # => [Array of Hashes]
+  msgs[1].chunks[0][:ssrc]         # => 3945864703
+  msgs[1].chunks[0][:type]         # => :cname
+  msgs[1].chunks[0][:data]         # => "00-09-df-1b-ec-0a"
+
+  msgs[2].class                    # => RTCP::RSI
+  msgs[2].ssrc                     # => 3945864703
+  msge[2].ntp_timestamp            # => [Time Object]
+
+  msgs[3].class                    # => RTCP::APP
+  msgs[3].name                     # => "PLII"
+  msgs[3].data                     # => [Binary Data]
+
+  msgs[4].class                    # => RTCP::Generic
+  msgs[4].data                     # => [Binary Data]
 
 == Requirements
 
