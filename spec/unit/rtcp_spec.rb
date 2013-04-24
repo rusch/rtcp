@@ -18,7 +18,11 @@ describe RTCP do
     end
 
     it "returns an array of RTCP:: objects" do
-      rtcps = RTCP.decode_all(TESTDATA)
+      rtcps = RTCP.decode_all(RR_PACKET_1 +
+                              SDES_PACKET_1 +
+                              AVB_PACKET +
+                              XR_PACKET_1
+                              )
 
       rtcps.should be_kind_of(Array)
       rtcps.length.should == 4 # TEST_DATA contains 4 RTCP packets
@@ -31,7 +35,7 @@ describe RTCP do
 
   context ".decode" do
     it "decodes the first packet and returns it as an RTCP:: object" do
-      rtcp = RTCP.decode(RECEIVER_REPORT_PACKET + SOURCE_DESCRIPTION_PACKET)
+      rtcp = RTCP.decode(RR_PACKET_1 + SDES_PACKET_1)
 
       rtcp.should be_kind_of(RTCP::RR)
     end

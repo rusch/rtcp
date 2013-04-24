@@ -17,7 +17,7 @@ describe RTCP::PSFB do
     end
 
     it 'raises an RTCP::DecodeError when paket type is not "PSFB"' do
-      expect { subject.decode(RECEIVER_REPORT_PACKET) }
+      expect { subject.decode(RR_PACKET_1) }
         .to raise_error(RTCP::DecodeError, /Wrong Packet Type/)
     end
 

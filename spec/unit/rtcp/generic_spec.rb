@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'rtcp'
+require 'rtcp/generic'
 
 describe RTCP::Generic do
   subject do
@@ -8,7 +8,7 @@ describe RTCP::Generic do
 
   context '.decode' do
     it 'decodes RTCP packets' do
-      packet = subject.decode(SOURCE_DESCRIPTION_PACKET)
+      packet = subject.decode(SDES_PACKET_1)
       packet.type_id.should == 202
       packet.length.should == 28
       packet.data.should be_kind_of(String)

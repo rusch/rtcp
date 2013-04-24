@@ -8,7 +8,7 @@ describe RTCP::RR do
 
   context '.decode' do
     it 'decodes "Receiver Record" packets' do
-      rr = subject.decode(RECEIVER_REPORT_PACKET)
+      rr = subject.decode(RR_PACKET_1)
 
       rr.version.should == 2
       rr.length.should == 32
@@ -38,12 +38,12 @@ describe RTCP::RR do
     end
 
     it 'does not consider the follwing packet to be padding' do
-      expect { subject.decode(RECEIVER_REPORT_PACKET) }
+      expect { subject.decode(RR_PACKET_1) }
         .not_to raise_error
     end
 
     it 'raises an RTCP::DecodeError when there is undeclared padding' do
-      corrupt_packet = RECEIVER_REPORT_PACKET.clone + "xxxx"
+      corrupt_packet = RR_PACKET_1.clone + "xxxx"
       corrupt_packet[2] = 0.chr
       corrupt_packet[3] = 8.chr
       expect { subject.decode(corrupt_packet) }
@@ -51,7 +51,7 @@ describe RTCP::RR do
     end
 
     it 'raises an RTCP::DecodeError when paket type is not "Receiver Record"' do
-      expect { subject.decode(SOURCE_DESCRIPTION_PACKET) }
+      expect { subject.decode(SDES_PACKET_1) }
         .to raise_error(RTCP::DecodeError, /Wrong Packet Type/)
     end
 

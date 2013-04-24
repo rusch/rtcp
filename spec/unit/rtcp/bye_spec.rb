@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'rtcp'
+require 'rtcp/bye'
 
 describe RTCP::BYE do
   subject do
@@ -8,7 +8,7 @@ describe RTCP::BYE do
 
   context '.decode' do
     it 'decodes "Goodbye" packet' do
-      packet = subject.decode(BYE_WITH_REASON_PACKET)
+      packet = subject.decode(BYE_PACKET_1)
       packet.version.should == 2
       packet.length.should == 16
       packet.reason.should == 'mmptest'
@@ -17,7 +17,7 @@ describe RTCP::BYE do
     end
 
     it 'raises an RTCP::DecodeError when paket type is not "Goodbye"' do
-      expect { subject.decode(RECEIVER_REPORT_PACKET) }
+      expect { subject.decode(RR_PACKET_1) }
         .to raise_error(RTCP::DecodeError, /Wrong Packet Type/)
     end
 

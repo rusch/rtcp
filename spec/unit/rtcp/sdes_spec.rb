@@ -8,7 +8,7 @@ describe RTCP::SDES do
 
   context '.decode' do
     it 'decodes "Source Description" packet #1' do
-      packet = subject.decode(SOURCE_DESCRIPTION_PACKET)
+      packet = subject.decode(SDES_PACKET_1)
       packet.version.should == 2
       packet.length.should == 28
       packet.chunks.should be_kind_of(Array)
@@ -22,7 +22,7 @@ describe RTCP::SDES do
     end
 
     it 'decodes "Source Description" packet #2' do
-      packet = subject.decode(SOURCE_DESCRIPTION_PACKET_2)
+      packet = subject.decode(SDES_PACKET_2)
       packet.version.should == 2
       packet.length.should == 24
       packet.chunks.should be_kind_of(Array)
@@ -36,7 +36,7 @@ describe RTCP::SDES do
     end
 
     it 'raises an RTCP::DecodeError when paket type is not "Source Description"' do
-      expect { subject.decode(RECEIVER_REPORT_PACKET) }
+      expect { subject.decode(RR_PACKET_1) }
         .to raise_error(RTCP::DecodeError, /Wrong Packet Type/)
     end
 
