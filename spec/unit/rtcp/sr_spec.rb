@@ -18,7 +18,7 @@ describe RTCP::SR do
       sr.report_blocks.length.should == 0
       sr.rtp_timestamp.should == 37920
       sr.ntp_timestamp.should be_kind_of(Time)
-      sr.ntp_timestamp.to_f.should == 34081.91799993673
+      sr.ntp_timestamp.to_f.round(5).should == 34081.918
       sr.packet_count.should == 158
       sr.octet_count.should == 39816
     end
