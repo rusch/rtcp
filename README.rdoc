@@ -6,6 +6,8 @@
 
 {<img src="https://codeclimate.com/github/rusch/rtcp.png" />}[https://codeclimate.com/github/rusch/rtcp]
 
+{<img src="https://travis-ci.org/rusch/rtcp.png?branch=master" alt="Build Status" />}[https://travis-ci.org/rusch/rtcp]
+
 == Description
 
 The RTP Control Protocol (RTCP) gathers statistical data about RTP sessions,
