@@ -1,6 +1,10 @@
 = rtcp
 
 * https://github.com/rusch/rtcp
+* http://www.ietf.org/rfc/rfc3550.txt
+* http://www.ietf.org/rfc/rfc4585.txt
+
+{<img src="https://codeclimate.com/github/rusch/rtcp.png" />}[https://codeclimate.com/github/rusch/rtcp]
 
 == Description
 
@@ -13,6 +17,15 @@ This library parses RTCP data into ruby objects.
 == Features
 
 * Parse RTCP Packets into Ruby Objects
+* Supports the following RTCP Packet types:
+  * 200: Sender Report
+  * 201: Receiver Report
+  * 202: Source Description
+  * 203: Goodbye
+  * 204: Application-Defined (Does not decode application-dependent data)
+  * 206: Payload-Specific FB message (Does not decode FCI block)
+  * 207: Extended Report
+  * 209: Receiver Summary Information
 
 == Examples
 
