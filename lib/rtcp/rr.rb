@@ -58,7 +58,7 @@ class RTCP::RR < RTCP
       report_block[:absolute_lost] =
         (0.chr + report_block[:absolute_lost]).unpack('l>')[0]
 
-      report_block_data = report_block_data.byteslice(24..-1)
+      report_block_data = report_block_data.slice(24..-1)
 
       report_block
     end
