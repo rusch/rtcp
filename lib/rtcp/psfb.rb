@@ -13,8 +13,7 @@
 #       :            Feedback Control Information (FCI)                 :
 #       :                                                               :
 
-require_relative 'base'
-class RTCP::PSFB < RTCP::Base
+class RTCP::PSFB < RTCP
 
   FORMATS = {
     1 => :pli,  # Picture Loss Indication (PLI)
@@ -29,8 +28,8 @@ class RTCP::PSFB < RTCP::Base
     :first_mb, :number, :picture_id
 
   def decode(packet_data) 
-    vpfmt, packet_type, length, @sender_ssrc, @source_ssrc,
-      fci_data = packet_data.unpack('CCnN2a*')
+    vpfmt, packet_type, length, @sender_ssrc, @source_ssrc =
+      packet_data.unpack('CCnN2')
     ensure_packet_type(packet_type)
 
     @length  = 4 * (length + 1)
@@ -38,13 +37,11 @@ class RTCP::PSFB < RTCP::Base
     format  = vpfmt & 31
     @format = FORMATS[format] || format
 
-    if packet_data.length > @length
-      fci_data = fci_data[0..(@length - 13)]
-    end
+    @fci_data = payload_data(packet_data, @length, 12)
 
     case @format
     when :sli
-      pl  = fci.unpack('L')
+      pl  = @fci_data.unpack('L')
       @first_mb   = pl >> 19
       @number     = (pl >> 6) & 8191
       @picture_id = pl & 63

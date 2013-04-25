@@ -47,26 +47,21 @@
 #        | min_ttl_or_hl | max_ttl_or_hl |mean_ttl_or_hl | dev_ttl_or_hl |
 #        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-
-require_relative 'base'
-class RTCP::XR < RTCP::Base
+class RTCP::XR < RTCP
 
   PT_ID = 207
 
   attr_reader :version, :ssrc, :report_blocks, :padding
 
   def decode(packet_data)
-    vprc, packet_type, length, @ssrc, report_block_data =
-      packet_data.unpack('CCnNa*')
+    vprc, packet_type, length, @ssrc = packet_data.unpack('CCnN')
     ensure_packet_type(packet_type)
 
     @version = vprc >> 6
     @length  = 4 * (length + 1)
     @report_blocks = []
 
-    if packet_data.length > @length
-      report_block_data = report_block_data[0..(@length - 9)]
-    end
+    report_block_data = payload_data(packet_data, @length, 8)
 
     while report_block_data && report_block_data.length >= 4
       bt, length = report_block_data.unpack('Cxn')

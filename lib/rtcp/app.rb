@@ -14,24 +14,21 @@
 #       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #        0                   1                   2                   3
 
-require_relative 'base'
-class RTCP::APP < RTCP::Base
+class RTCP::APP < RTCP
 
   PT_ID = 204
 
-  attr_reader :version, :subtype, :ssrc, :name, :data
+  attr_reader :version, :subtype, :ssrc, :name, :app_data
 
   def decode(packet_data) 
-    vpst, packet_type, length, @ssrc, @name, @data = packet_data.unpack('CCnNa4a*')
+    vpst, packet_type, length, @ssrc, @name = packet_data.unpack('CCnNa4')
     ensure_packet_type(packet_type)
 
     @length  = 4 * (length + 1)
     @version = vpst >> 6
     @subtype = vpst & 31
 
-    if packet_data.length > @length
-      @data = @data[0..(@length - 13)]
-    end
+    @app_data = payload_data(packet_data, @length, 12)
 
     self
   end

@@ -27,25 +27,21 @@
 #        |                  profile-specific extensions                  |
 #        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-require_relative 'base'
-class RTCP::RR < RTCP::Base
+class RTCP::RR < RTCP
 
   PT_ID = 201
 
   attr_reader :version, :ssrc, :report_blocks, :padding
 
   def decode(packet_data)
-    vprc, packet_type, length, @ssrc, report_block_data =
-      packet_data.unpack('CCnNa*')
+    vprc, packet_type, length, @ssrc = packet_data.unpack('CCnN')
     ensure_packet_type(packet_type)
 
     @length  = 4 * (length + 1)
     @version = vprc >> 6
     count    = vprc & 15
 
-    if packet_data.length > @length
-      report_block_data = report_block_data[0..(@length - 9)]
-    end
+    report_block_data = payload_data(packet_data, @length, 8)
 
     @report_blocks = (1..count).collect do
       report_block = Hash[[

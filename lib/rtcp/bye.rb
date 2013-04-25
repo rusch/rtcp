@@ -13,24 +13,21 @@
 # (opt) |     length    |               reason for leaving            ...
 #       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-require_relative 'base'
-class RTCP::BYE < RTCP::Base
+class RTCP::BYE < RTCP
 
   PT_ID = 203
 
   attr_reader :version, :ssrcs, :reason, :padding
 
   def decode(packet_data) 
-    vpsc, packet_type, length, bye_data = packet_data.unpack('CCna*')
+    vpsc, packet_type, length = packet_data.unpack('CCn')
     ensure_packet_type(packet_type)
 
     @length  = 4 * (length + 1)
     @version = vpsc >> 6
     count    = vpsc & 15
 
-    if packet_data.length > @length
-      bye_data = bye_data[0..(@length - 5)]
-    end
+    bye_data = payload_data(packet_data, @length, 4)
 
     @ssrcs = bye_data.unpack("N#{count}")
 

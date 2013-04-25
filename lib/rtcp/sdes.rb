@@ -17,8 +17,7 @@
 #        |                              ...                              |
 #        +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
-require_relative 'base'
-class RTCP::SDES < RTCP::Base
+class RTCP::SDES < RTCP
 
   PT_ID = 202
 
@@ -36,12 +35,14 @@ class RTCP::SDES < RTCP::Base
   attr_reader :version, :chunks
 
   def decode(packet_data) 
-    vprc, packet_type, length, sdes_data = packet_data.unpack('CCna*')
+    vprc, packet_type, length = packet_data.unpack('CCn')
     ensure_packet_type(packet_type)
 
     @length  = 4 * (length + 1)
     @version = vprc >> 6
     count    = vprc & 15
+
+    sdes_data = payload_data(packet_data, @length, 4)
 
     @chunks = (1..count).collect do
       ssrc, type_id, len = sdes_data.unpack('NCC')

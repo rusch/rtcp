@@ -26,10 +26,10 @@ describe RTCP do
 
       rtcps.should be_kind_of(Array)
       rtcps.length.should == 4 # TEST_DATA contains 4 RTCP packets
-      rtcps[0].should be_kind_of(RTCP::RR)
-      rtcps[1].should be_kind_of(RTCP::SDES)
-      rtcps[2].should be_kind_of(RTCP::Generic)
-      rtcps[3].should be_kind_of(RTCP::XR)
+      rtcps[0].class.should == RTCP::RR
+      rtcps[1].class.should == RTCP::SDES
+      rtcps[2].class.should == RTCP
+      rtcps[3].class.should == RTCP::XR
     end
   end
 

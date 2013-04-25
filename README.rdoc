@@ -47,10 +47,10 @@ This library parses RTCP data into ruby objects.
 
   msgs[3].class                    # => RTCP::APP
   msgs[3].name                     # => "PLII"
-  msgs[3].data                     # => [Binary Data]
+  msgs[3].app_data                 # => [Binary Data -- The application data]
 
-  msgs[4].class                    # => RTCP::Generic
-  msgs[4].data                     # => [Binary Data]
+  msgs[4].class                    # => RTCP
+  msgs[4].to_s                     # => [Binary Data -- The whole RTCP packet]
 
 == Requirements
 

@@ -37,8 +37,7 @@
 #        |                  profile-specific extensions                  |
 #        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-require_relative 'base'
-class RTCP::SR < RTCP::Base
+class RTCP::SR < RTCP
 
   PT_ID = 200
 
@@ -47,8 +46,7 @@ class RTCP::SR < RTCP::Base
 
   def decode(packet_data)
     vprc, packet_type, length, @ssrc, ntp_h, ntp_l, @rtp_timestamp,
-      @packet_count, @octet_count, report_block_data =
-        packet_data.unpack('CCnN6a*')
+      @packet_count, @octet_count = packet_data.unpack('CCnN6')
     ensure_packet_type(packet_type)
 
     
@@ -58,9 +56,7 @@ class RTCP::SR < RTCP::Base
     @version = vprc >> 6
     count    = vprc & 15
 
-    if packet_data.length > @length
-      report_block_data = report_block_data[0..(@length - 29)]
-    end
+    report_block_data = payload_data(packet_data, @length, 28)
 
     @report_blocks = (1..count).collect do
       report_block = Hash[[

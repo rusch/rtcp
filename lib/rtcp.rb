@@ -1,6 +1,5 @@
 require_relative 'rtcp/version'
 require_relative 'rtcp/decode_error'
-require_relative 'rtcp/generic'
 require_relative 'rtcp/sr'
 require_relative 'rtcp/rr'
 require_relative 'rtcp/sdes'
@@ -12,20 +11,15 @@ require_relative 'rtcp/psfb'
 
 class RTCP
 
-  @@packet_classes = {
-    RTCP::Generic::PT_ID => RTCP::Generic,
-    RTCP::SR::PT_ID      => RTCP::SR,
-    RTCP::RR::PT_ID      => RTCP::RR,
-    RTCP::SDES::PT_ID    => RTCP::SDES,
-    RTCP::XR::PT_ID      => RTCP::XR,
-    RTCP::APP::PT_ID     => RTCP::APP,
-    RTCP::RSI::PT_ID     => RTCP::RSI,
-    RTCP::PSFB::PT_ID    => RTCP::PSFB,
-    RTCP::BYE::PT_ID     => RTCP::BYE,
-  }
+  attr_reader :length, :type_id
 
-  attr_reader :version, :packets, :rr, :sdes, :bye, :app, :rtpfb, :psfb, :xr,
-    :avb, :rsi
+  @@packet_classes = {}
+  self.constants.each do |sym|
+    const = self.const_get(sym)
+    if const.is_a?(Class) && const.superclass == self
+      @@packet_classes[const::PT_ID] = const
+    end
+  end
 
   # Decodes only the first RTCP packet and returns it
   def self.decode(data)
@@ -35,7 +29,7 @@ class RTCP
     length = 4 * (length + 1)
     raise(RTCP::DecodeError, "Truncated Packet") if (data.length < length)
 
-    self.packet_class(packet_type).decode(data.slice(0..(length - 1)))
+    self.packet_class(packet_type).new.decode(data.slice(0..(length - 1)))
   end
 
   # Decodes all RTCP packets and returns them in an array
@@ -49,10 +43,42 @@ class RTCP
     packets
   end
 
+  def decode(packet_data)
+    @type_id, length = packet_data.unpack('xCn')
+    @length      = 4 * (length + 1)
+
+    @packet_data = packet_data
+    self
+  end
+
+  def to_s
+    @packet_data
+  end
+
+  protected
+
+  def ensure_packet_type(packet_type)
+    if packet_type != self.class::PT_ID
+      raise(RTCP::DecodeError, "Wrong Packet Type. packet_type=#{packet_type}")
+    end
+  end
+
+  def payload_data(packet_data, length, header_length)
+    if packet_data.length > length
+      @packet_data = packet_data[0..length]
+    elsif packet_data.length == length
+      @packet_data = packet_data
+    else
+      raise RTCP::DecodeError, "Truncated Packet"
+    end
+
+    @packet_data[header_length..-1]
+  end
+
   private
 
   def self.packet_class(packet_type)
-    @@packet_classes[packet_type] || @@packet_classes[999]
+    @@packet_classes[packet_type] || self
   end
 
 end

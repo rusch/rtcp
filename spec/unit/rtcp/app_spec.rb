@@ -14,7 +14,7 @@ describe RTCP::APP do
       packet.subtype.should == 1
       packet.ssrc.should == 3945864703
       packet.name.should == 'PLII'
-      packet.data.should be_kind_of(String)
+      packet.app_data.should be_kind_of(String)
     end
 
     it 'raises an RTCP::DecodeError when paket type is not "Application-Defined"' do

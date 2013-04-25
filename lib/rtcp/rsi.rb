@@ -44,16 +44,15 @@
 #       |                             ...                               |
 #       +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
-require_relative 'base'
-class RTCP::RSI < RTCP::Base
+class RTCP::RSI < RTCP
 
   PT_ID = 209
 
   attr_reader :version, :ssrc, :summarized_ssrc, :ntp_timestamp, :report_blocks
 
   def decode(packet_data) 
-    vp, packet_type, length, @ssrc, @summarized_ssrc, ntp_h, ntp_l,
-      report_block_data = packet_data.unpack('CCnN4a*')
+    vp, packet_type, length, @ssrc, @summarized_ssrc, ntp_h, ntp_l =
+      packet_data.unpack('CCnN4')
     ensure_packet_type(packet_type)
 
     @length  = 4 * (length + 1)
@@ -61,11 +60,9 @@ class RTCP::RSI < RTCP::Base
 
     @ntp_timestamp = Time.at(ntp_h - 2208988800 + (ntp_l.to_f / 4294967296))
 
-    if packet_data.length > @length
-      report_block_data = report_block_data[0..(@length - 21)]
-    end
+    report_block_data = payload_data(packet_data, @length, 20)
 
-   @report_blocks = []
+    @report_blocks = []
     while report_block_data && report_block_data.length >= 2
       type, len = report_block_data.unpack('CC')
       @report_blocks.push({
