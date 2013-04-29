@@ -50,7 +50,7 @@ class RTCP::SR < RTCP
     ensure_packet_type(packet_type)
     @length  = 4 * (length + 1)
     @version, @padding, rc = decode_vprc(vprc, @length - 28)
-    @ntp_timestamp = Time.at(ntp_h - 2208988800 + (ntp_l.to_f / 0xffffffff))
+    @ntp_timestamp = Time.at(ntp_h - 2208988800 + (ntp_l.to_f / 0x100000000))
     @report_blocks = decode_reports(payload_data(packet_data, @length, 28), rc)
     self
   end
