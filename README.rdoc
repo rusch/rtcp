@@ -1,12 +1,9 @@
-= rtcp
+= rtcp {<img src="https://codeclimate.com/github/rusch/rtcp.png" />}[https://codeclimate.com/github/rusch/rtcp] {<img src="https://travis-ci.org/rusch/rtcp.png?branch=master" alt="Build Status" />}[https://travis-ci.org/rusch/rtcp]
+
 
 * https://github.com/rusch/rtcp
 * http://www.ietf.org/rfc/rfc3550.txt
 * http://www.ietf.org/rfc/rfc4585.txt
-
-{<img src="https://codeclimate.com/github/rusch/rtcp.png" />}[https://codeclimate.com/github/rusch/rtcp]
-
-{<img src="https://travis-ci.org/rusch/rtcp.png?branch=master" alt="Build Status" />}[https://travis-ci.org/rusch/rtcp]
 
 == Description
 
