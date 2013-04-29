@@ -57,22 +57,26 @@ class RTCP::RSI < RTCP
 
     @length  = 4 * (length + 1)
     @version = vp >> 6
-
-    @ntp_timestamp = Time.at(ntp_h - 2208988800 + (ntp_l.to_f / 4294967296))
-
-    report_block_data = payload_data(packet_data, @length, 20)
-
-    @report_blocks = []
-    while report_block_data && report_block_data.length >= 2
-      type, len = report_block_data.unpack('CC')
-      @report_blocks.push({
-        type: type,
-        data: report_block_data.slice(0..(len-1))
-      })
-      report_block_data = report_block_data.slice(len..-1)
-    end
-
+    @ntp_timestamp = Time.at(ntp_h - 2208988800 + (ntp_l.to_f / 0x100000000))
+    @report_blocks = decode_reports(payload_data(packet_data, @length, 20))
     self
+  end
+
+  private
+
+  def decode_reports(data)
+    blocks = []
+    while data && data.length >= 2
+      type, len = report_block_data.unpack('CC')
+      if data.length < len
+        raise DecodeError, "Truncated Packet"
+      end
+      blocks.push({
+        type: type,
+        data: data.slice!(0..(len-1))
+      })
+    end
+    blocks
   end
 
 end
