@@ -13,7 +13,7 @@ describe RTCP::SR do
       sr.version.should == 2
       sr.length.should == 28
       sr.ssrc.should == 4090175489
-      sr.padding.should == nil
+      sr.padding.should == false
       sr.report_blocks.should be_kind_of(Array)
       sr.report_blocks.length.should == 0
       sr.rtp_timestamp.should == 37920
@@ -48,7 +48,7 @@ describe RTCP::SR do
     it 'raises an RTCP::DecodeError when there is undeclared padding' do
       corrupt_packet = SR_PACKET_1.clone + "xxxx"
       corrupt_packet[2] = 0.chr
-      corrupt_packet[3] = 6.chr
+      corrupt_packet[3] = 7.chr
       expect { subject.decode(corrupt_packet) }
         .to raise_error(RTCP::DecodeError, "Packet has undeclared padding")
     end

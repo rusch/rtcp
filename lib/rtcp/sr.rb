@@ -48,18 +48,21 @@ class RTCP::SR < RTCP
     vprc, packet_type, length, @ssrc, ntp_h, ntp_l, @rtp_timestamp,
       @packet_count, @octet_count = packet_data.unpack('CCnN6')
     ensure_packet_type(packet_type)
-
-    
-    @ntp_timestamp = Time.at(ntp_h - 2208988800 + (ntp_l.to_f / 4294967296))
-
     @length  = 4 * (length + 1)
-    @version = vprc >> 6
-    count    = vprc & 15
+    @version, @padding, rc = decode_vprc(vprc, @length - 28)
+    @ntp_timestamp = Time.at(ntp_h - 2208988800 + (ntp_l.to_f / 0xffffffff))
+    @report_blocks = decode_reports(payload_data(packet_data, @length, 28), rc)
+    self
+  end
 
-    report_block_data = payload_data(packet_data, @length, 28)
+  protected
 
-    @report_blocks = (1..count).collect do
-      report_block = Hash[[
+  def decode_reports(data, count)
+    (1..count).collect do
+      *values, data = data.unpack('NCa3N4a*')
+      values[2] = (0.chr + values[2]).unpack('l>')[0]
+
+      Hash[[
         :ssrc,
         :fraction_lost,
         :absolute_lost,
@@ -67,25 +70,17 @@ class RTCP::SR < RTCP
         :jitter,
         :last_sr,
         :delay_since_last_sr,
-      ].zip(report_block_data.unpack('NCa3N4'))]
-
-      # This is a 24bit big endian signed integer :(
-      report_block[:absolute_lost] =
-        (0.chr + report_block[:absolute_lost]).unpack('l>')[0]
-
-      report_block_data = report_block_data.slice(24..-1)
-
-      report_block
+      ].zip(values)]
     end
+  end
 
-    # Padding
-    if (vprc & 16 == 16)
-      @padding = report_block_data
-    elsif (report_block_data != '')
+  def decode_vprc(vprc, payload_length)
+    rc = vprc & 0x1f
+    padding = vprc & 0x20 == 0x20
+    if !padding && (payload_length > rc * 24)
       raise(RTCP::DecodeError, "Packet has undeclared padding")
     end
-
-    self
+    [ (vprc >> 6), padding, rc ]
   end
 
 end

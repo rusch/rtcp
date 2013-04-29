@@ -16,7 +16,7 @@ class RTCP
   @@packet_classes = {}
   self.constants.each do |sym|
     const = self.const_get(sym)
-    if const.is_a?(Class) && const.superclass == self
+    if const.is_a?(Class) && const <= self
       @@packet_classes[const::PT_ID] = const
     end
   end

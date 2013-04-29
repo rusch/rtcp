@@ -13,7 +13,7 @@ describe RTCP::RR do
       rr.version.should == 2
       rr.length.should == 32
       rr.ssrc.should == 1027816375
-      rr.padding.should == nil
+      rr.padding.should == false
       rr.report_blocks.should be_kind_of(Array)
       rr.report_blocks.length.should == 1
 

@@ -27,7 +27,7 @@
 #        |                  profile-specific extensions                  |
 #        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-class RTCP::RR < RTCP
+class RTCP::RR < RTCP::SR
 
   PT_ID = 201
 
@@ -36,40 +36,9 @@ class RTCP::RR < RTCP
   def decode(packet_data)
     vprc, packet_type, length, @ssrc = packet_data.unpack('CCnN')
     ensure_packet_type(packet_type)
-
     @length  = 4 * (length + 1)
-    @version = vprc >> 6
-    count    = vprc & 15
-
-    report_block_data = payload_data(packet_data, @length, 8)
-
-    @report_blocks = (1..count).collect do
-      report_block = Hash[[
-        :ssrc,
-        :fraction_lost,
-        :absolute_lost,
-        :highest_sequence_number,
-        :jitter,
-        :last_sr,
-        :delay_since_last_sr,
-      ].zip(report_block_data.unpack('NCa3N4'))]
-
-      # This is a 24bit big endian signed integer :(
-      report_block[:absolute_lost] =
-        (0.chr + report_block[:absolute_lost]).unpack('l>')[0]
-
-      report_block_data = report_block_data.slice(24..-1)
-
-      report_block
-    end
-
-    # Padding
-    if (vprc & 16 == 16)
-      @padding = report_block_data
-    elsif (report_block_data != '')
-      raise(RTCP::DecodeError, "Packet has undeclared padding")
-    end
-
+    @version, @padding, rc = decode_vprc(vprc, @length - 8)
+    @report_blocks = decode_reports(payload_data(packet_data, @length, 8), rc)
     self
   end
 
