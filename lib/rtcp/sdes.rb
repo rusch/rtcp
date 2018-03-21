@@ -34,26 +34,43 @@ class RTCP::SDES < RTCP
 
   attr_reader :version, :chunks
 
-  def decode(packet_data) 
+  def decode(packet_data)
     vprc, packet_type, length = packet_data.unpack('CCn')
     ensure_packet_type(packet_type)
 
     @length  = 4 * (length + 1)
     @version = vprc >> 6
     count    = vprc & 15
-
+    loop_length = @length
     sdes_data = payload_data(packet_data, @length, 4)
+    loop_length -= 4
+    chunks = []
+    for i in 0..count-1
+      ssrc, payload = sdes_data.unpack('Na*')
+      loop_length -= 4
+      sdes_items = []
+      while loop_length > 0
+        type_id, payload = payload.unpack('Ca*')
+        loop_length -= 1
+        break if type_id == 0
 
-    @chunks = (1..count).collect do
-      ssrc, type_id, len = sdes_data.unpack('NCC')
-      val, payload = sdes_data.unpack("x6a#{len}a*")
-
+        len, payload = payload.unpack("Ca*")
+        val, payload = payload.unpack("a#{len}a*")
+        type = SDES_CHUNK_TYPES[type_id] || type_id
+        sdes_items.push({
+              type: type,
+              data: val,
+              length: len
+        })
+        loop_length -= (2 + len)
+      end
+      chunks.push(
       {
         ssrc: ssrc,
-        type: SDES_CHUNK_TYPES[type_id] || type_id,
-        data: val
-      }
+        sdes_items: sdes_items
+      })
     end
+    @chunks = chunks
     self
   end
 
